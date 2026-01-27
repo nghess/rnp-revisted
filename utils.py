@@ -1,5 +1,6 @@
 import os
 import re
+import scipy.io
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -213,6 +214,15 @@ def get_ids_from_path(data_paths, part=3):
 
     return session_ids, mouse_ids
 
+def load_mat_file(filepath, variable_name=None):
+    # Load the .mat file
+    mat_data = scipy.io.loadmat(filepath)
+    # Remove metadata keys that MATLAB adds
+    mat_data = {key: value for key, value in mat_data.items() 
+                if not key.startswith('__')}
+    mat_data = mat_data[list(mat_data.keys())[0]]
+    # If a specific variable is requested, return only that variable 
+    return mat_data
 
 # ============================================================================
 # SIGNAL PROCESSING
